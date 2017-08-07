@@ -1,0 +1,51 @@
+{extend name='layout'}
+{block name='body'}
+<div class="card card-default">
+	<div class="card-block">
+		<div class="pull-left">
+			<h3 class="card-title">{$mete_title}</h3>
+		</div>
+		<div class="pull-right">
+			<a href="" class="btn btn-success">新增</a>
+			<a href="" class="btn btn-primary">启用</a>
+			<a href="" class="btn btn-danger">禁用</a>
+		</div>
+	</div>
+	<div class="card-block">
+		<div class="table-responsive">
+			<table class="table table-hover table-stripe">
+				<thead>
+					<tr>
+						<th><input type="checkbox"></th>
+						<th>ID</th>
+						<th>标识</th>
+						<th>名称</th>
+						<th>创建时间</th>
+						<th>状态</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{volist name='list' id='ls'}
+					<tr>
+						<td><input type="checkbox"></td>
+						<td>{$ls.id}</td>
+						<td>{$ls.name}</td>
+						<td>{$ls.title}</td>
+						<td>{$ls.create_time}</td>
+						<td>{$ls.status?'<span class="tag tag-success">启用</span>':'<span class="tag tag-danger">禁用</span>'}</td>
+						<td>
+							<a href="" class="btn btn-success btn-sm">字段</a>
+							<a href="" class="btn btn-primary btn-sm">禁用</a>
+							<a href="" class="btn btn-warning btn-sm">编辑</a>
+							<a href="" class="btn btn-danger btn-sm">删除</a>
+							<a href="" class="btn btn-default btn-sm">数据</a>
+						</td>
+					</tr>
+					{/volist}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{/block}

@@ -1,0 +1,65 @@
+{extend name='layout'}
+{block name='body'}
+<div class="card card-default">
+	<div class="card-block">
+		<div class="pull-left"><h3 class="card-title">{$mete_title}</h3></div>
+		<div class="pull-right">
+			<a href="" class="btn btn-success">新增</a>
+			<a href="" class="btn btn-danger">删除</a>
+			<a href="" class="btn btn-primary">导入</a>
+		</div>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-hover table-stripe">
+			<thead class="thead-inverse">
+			<tr>
+				<th><input type="checkbox"></th>
+				<th>ID</th>
+				<th>名称</th>
+				<th>上级菜单</th>
+				<th>分组</th>
+				<th>URL</th>
+				<th>排序</th>
+				<th>开发者模式</th>
+				<th>隐藏</th>
+				<th>操作</th>
+			</tr>
+			</thead>
+			<tbody>
+			{volist name='list[0]' id='tm'}
+			<tr>
+				<td><input type="checkbox"></td>
+				<td>{$tm.id}</td>
+				<td><i class="fa fa-{$tm.icon}"></i>{$tm.title}</td>
+				<td>{$tm.pid}</td>
+				<td>{$tm.group}</td>
+				<td>{$tm.url}</td>
+				<td>{$tm.sort}</td>
+				<td>{$tm.is_dev}</td>
+				<td>{$tm.hide}</td>
+				<td></td>
+			</tr>
+			{notempty name="list[$tm.id]"}
+			{volist name="list[$tm.id]" id='sm'}
+				<tr>
+					<td><input type="checkbox"></td>
+					<td>{$sm.id}</td>
+					<td>
+					{$i==count($list[$tm.id])?'└─':'├─'}
+					 <i class="fa fa-{$sm.icon}"></i>{$sm.title}</td>
+					<td>{$tm.title}</td>
+					<td>{$sm.group}</td>
+					<td>{$sm.url}</td>
+					<td>{$sm.sort}</td>
+					<td>{$sm.is_dev}</td>
+					<td>{$sm.hide}</td>
+					<td></td>
+				</tr>
+			{/volist}
+			{/notempty}
+			{/volist}
+			</tbody>
+		</table>
+	</div>
+</div>
+{/block}

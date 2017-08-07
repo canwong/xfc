@@ -1,0 +1,66 @@
+{extend name='layout'}
+{block name='body'}
+<div class="card card-default">
+	<div class="card-block">
+		<div class="pull-left">
+			<h3 class="card-title">{$mete_title}</h3>
+		</div>
+		<div class="pull-right">
+			<a href="{:url('admin/config/index')}" class="btn btn-primary"><i class="fa fa-list"></i> 配置列表</a>
+			<a href="" class="btn btn-success"><i class="fa fa-plus"></i> 添加配置</a>
+		</div>
+	</div>
+	<div class="card-header">
+	<ul class="nav nav-tabs card-header-tabs pull-left" role="tablist">
+		{volist name='group' id='item'}
+		<li class="nav-item"><a href="{:url('admin/config/group',['id'=>$key])}" class="nav-link {eq name='$id' value='$key'}active{/eq}">{$item}</a></li>
+		{/volist}
+	</ul>
+	</div>
+	<div class="card-block">
+		<div class="tab-pane active" role="tabpanel">
+			<form action="#" method="post" class="form form-horizontal">
+			{volist name='list' id='vo'}
+			<fieldset class="form-group">
+				<label class="col-md-2 control-label">{$vo.title}</label>
+				<div class="col-md-10">
+				{switch name='$vo.type'}
+				{case value="text"}
+				<input type="text" class="form-control" name="config[{$vo['name']}]" id="config[{$vo['name']}]" value="{$vo['value']}" placeholder="{$vo['title']}" style="width:50%;">
+				{/case}
+				{case value="num"}
+				<input type="text" class="form-control" name="config[{$vo['name']}]" id="config[{$vo['name']}]" value="{$vo['value']}" placeholder="{$vo['title']}" style="width:30%;">
+				{/case}
+				{case value="string"}
+				<input type="text" class="form-control" name="config[{$vo['name']}]" id="config[{$vo['name']}]" value="{$vo['value']}" placeholder="{$vo['title']}" style="width:80%;">
+				{/case}
+				{case value="textarea"}
+				<textarea class="form-control" name="config[{$vo['name']}]" id="config[{$vo['name']}]" style="width:80%; height:120px;">{$vo['value']}</textarea>
+				{/case}
+				{case value="select"}
+				<select class="form-control" name="config[{$vo['name']}]" id="config[{$vo['name']}]" style="width:auto;">
+				{volist name=":parse_config_attr($vo['extra'])" id="selectvo"}
+				<option value="{$key}" {eq name="vo['value']" value="$key"}selected{/eq}>{$selectvo}</option>
+				{/volist}
+				</select>
+				{/case}
+				{case value="bool"}
+				<select class="form-control" name="config[{$vo['name']}]" id="config[{$vo['name']}]" style="width:auto;">
+				{volist name=":parse_config_attr($vo['extra'])" id="boolvo"}
+				<option value="{$key}" {eq name="vo['value']" value="$key"}selected{/eq}>{$boolvo}</option>
+				{/volist}
+				</select>
+				{/case}
+				{/switch}
+				</div>
+			</fieldset>
+			{/volist}
+			<div class="form-group">
+				<button type="submit" class="btn btn-success submit-btn ajax-post" target-form="form">确认提交</button>
+				<button class="btn btn-danger btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+			</div>
+		</form>
+		</div>
+	</div>
+</div>
+{/block}

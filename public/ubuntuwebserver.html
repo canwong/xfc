@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Ubuntu网站环境搭建</title>
+</head>
+<body>
+	<fieldset>
+		<legend><h2>网站搭建</h2></legend>
+		<h3>Apache2</h3>
+		<p>sudo apt-get install apache2</p>
+		<h3>PHP7</h3>
+		<p>sudo apt-get install php -y</p>
+		<p>sudo apt-get install php7.0-fpm php7.0-mysql php7.0-common php7.0-mbstring php7.0-gd php7.0-json php7.0-cli php7.0-curl libapache2-mod-php7.0</p>
+		<h3>MySQL</h3>
+		<p>sudo apt-get install mysql-server</p>
+		<p>sudo apt-get install mysql-client</p>
+		<p>mysql_secure_installation</p>
+		<h3>phpmyadmin</h3>
+		<p>sudo apt-get install phpmyadmin</p>
+		<p>sudo apt-get install php-mbstring</p>
+		<p>sudo apt-get install php-gettext</p>
+		<p>sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin</p>
+	</fieldset>
+	<fieldset>
+		<legend><h2>网站相关</h2></legend>
+		<h3>vhost多站点</h3>
+		<p>/etc/apache2/sites-available 创建domain.conf</p>
+		<p>
+			<pre>
+				<code>
+			&lt;VirtualHost *:80&gt;
+			ServerName domain.com
+			ServerAdmin admin@domain.com
+			DocumentRoot "/var/www/domain"
+			ErrorLog "/var/log/apache2/domain_errors.log"
+			CustomLog "/var/log/apache2/discuz_accesses.log" common
+			&lt;/VirtualHost&gt;
+				</code>
+			</pre>
+		</p>
+		<p>sudo a2ensite domain.conf</p>
+		<p>sudo apache2 restart</p>
+		<p>ps:close domain -> a2dissite domain.conf</p>
+	</fieldset>
+	<fieldset>
+		<legend>
+			<h2>Sublime Text 3</h2>
+		</legend>
+		<h3>安装</h3>
+		<p>sudo add-apt-repository ppa:webupd8team/sublime-text-3</p>
+		<p>sudo apt-get update</p>
+		<p>sudo apt-get install sublime-text-installer</p>
+		<h3>Package Control</h3>
+		<p>import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read())</p>
+		<h3>常用插件</h3>
+		<p>自动补全：Emmet</p>
+		<h3>中文输入问题</h3>
+		<p>1.保存下面的代码到文件sublime_imfix.c(位于~目录)</p>
+		<p>
+			<pre>
+				<code>
+	#include &lt;gtk/gtkimcontext.h&gt;
+	void gtk_im_context_set_client_window (GtkIMContext *context,
+	          GdkWindow    *window)
+	{
+	  GtkIMContextClass *klass;
+	  g_return_if_fail (GTK_IS_IM_CONTEXT (context));
+	  klass = GTK_IM_CONTEXT_GET_CLASS (context);
+	  if (klass->set_client_window)
+	    klass->set_client_window (context, window);
+	  g_object_set_data(G_OBJECT(context),"window",window);
+	  if(!GDK_IS_WINDOW (window))
+	    return;
+	  int width = gdk_window_get_width(window);
+	  int height = gdk_window_get_height(window);
+	  if(width != 0 && height !=0)
+	    gtk_im_context_focus_in(context);
+	}
+				</code>
+			</pre>
+		</p>
+		<p>2.将上一步的代码编译成共享库libsublime-imfix.so，命令</p>
+		<p>gcc -shared -o libsublime-imfix.so sublime_imfix.c  `pkg-config --libs --cflags gtk+-2.0` -fPIC</p>
+		<p>3.将libsublime-imfix.so拷贝到sublime_text所在文件夹</p>
+		<p>sudo mv libsublime-imfix.so /opt/sublime_text/</p>
+		<p>修改文件/usr/bin/subl的内容</p>
+		<p>将：<pre><code>
+		#!/bin/sh
+		exec /opt/sublime_text/sublime_text "$@"</code></pre>
+		改为<pre><code>
+		#!/bin/sh
+		LD_PRELOAD=/opt/sublime_text/libsublime-imfix.so exec /opt/sublime_text/sublime_text "$@"
+		</code></pre>
+		</p>
+		<p>4.为了使用鼠标右键打开文件时能够使用中文输入，还需要修改文件sublime_text.desktop的内</p>
+		<p>sudo gedit /usr/share/applications/sublime_text.desktop</p>
+		<p>将[Desktop Entry]中的字符串</p> 
+		<p><pre><code>Exec=/opt/sublime_text/sublime_text&nbsp;%F</code></pre></p>
+		<p>修改为</p> 
+		<p><pre><code>Exec=bash&nbsp;-c&nbsp;"LD_PRELOAD=/opt/sublime_text/libsublime-imfix.so&nbsp;exec&nbsp;/opt/sublime_text/sublime_text&nbsp;%F"</code></pre></p>
+		<p>将[Desktop Action Window]中的字符串</p> 
+		<p><pre><code>Exec=/opt/sublime_text/sublime_text&nbsp;-n</code></pre></p>
+		<p>修改为</p> 
+		<p><pre><code>Exec=bash&nbsp;-c&nbsp;"LD_PRELOAD=/opt/sublime_text/libsublime-imfix.so&nbsp;exec&nbsp;/opt/sublime_text/sublime_text&nbsp;-n"</code></pre></p>
+		<p>将[Desktop Action Document]中的字符串</p> 
+		<p><pre><code>Exec=/opt/sublime_text/sublime_text&nbsp;--command&nbsp;new_file</code></pre></p>
+		<p>修改为</p> 
+		<p><pre><code>Exec=bash&nbsp;-c&nbsp;"LD_PRELOAD=/opt/sublime_text/libsublime-imfix.so&nbsp;exec&nbsp;/opt/sublime_text/sublime_text&nbsp;--command&nbsp;new_file"</code></pre></p>
+	</fieldset>
+</body>
+</html>

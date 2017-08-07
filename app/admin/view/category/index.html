@@ -1,0 +1,68 @@
+{extend name='layout'}
+{block name='body'}
+<div class="card card-default">
+	<div class="card-block">
+		<div class="pull-left">
+			<h3 class="card-title">{$mete_title}</h3>
+		</div>
+		<div class="pull-right">
+			<a href="" class="btn btn-primary"><i class="fa fa-plus"></i> 新增</a>
+		</div>
+	</div>
+	<div class="card-block">
+		<div class="table-responsive">
+			<table class="table table-hover table-stripe">
+				<thead class="thead-inverse">
+					<tr>
+						<th><input type="checkbox"></th>
+						<th>ID</th>
+						<th>名称</th>
+						<th>排序</th>
+						<th>发布</th>
+						<th>状态</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					{volist name='list[0]' id='ls'}
+					<tr>
+						<td><input type="checkbox"></td>
+						<td>{$ls.id}</td>
+						<td>{$ls.title}</td>
+						<td>{$ls.sort}</td>
+						<td>{$ls.allow_publish?'是':'否'}</td>
+						<td>{$ls.status?'<span class="tag tag-success">启用</span>':'<span class="tag tag-danger">停用</span>'}</td>
+						<td>
+							<a href="" class="btn btn-success btn-sm">编辑</a>
+							<a href="" class="btn btn-warning btn-sm">禁用</a>
+							<a href="" class="btn btn-danger btn-sm">删除</a>
+							<a href="" class="btn btn-primary btn-sm">移动</a>
+							<a href="" class="btn btn-success btn-sm">合并</a>
+						</td>
+					</tr>
+						{volist name='list[$ls.id]' id='sl'}
+						<tr>
+							<td><input type="checkbox"></td>
+							<td>{$sl.id}</td>
+							<td>
+								{$i==count($list[$ls.id])?'└─':'├─'} {$sl.title}
+							</td>
+							<td>{$sl.sort}</td>
+							<td>{$sl.allow_publish?'是':'否'}</td>
+							<td>{$sl.status?'<span class="tag tag-success">启用</span>':'<span class="tag tag-danger">停用</span>'}</td>
+							<td>
+								<a href="" class="btn btn-success btn-sm">编辑</a>
+								<a href="" class="btn btn-warning btn-sm">禁用</a>
+								<a href="" class="btn btn-danger btn-sm">删除</a>
+								<a href="" class="btn btn-primary btn-sm">移动</a>
+								<a href="" class="btn btn-success btn-sm">合并</a>
+							</td>
+						</tr>
+						{/volist}
+					{/volist}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{/block}

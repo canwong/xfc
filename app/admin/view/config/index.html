@@ -1,0 +1,60 @@
+{extend name='layout'}
+{block name='body'}
+<div class="card card-default">
+	<div class="card-block">
+		<div class="pull-left">
+			<h3 class="card-title">{$mete_title}</h3>
+		</div>
+		<div class="pull-right">
+			<a href="{:url('admin/config/group')}" class="btn btn-primary"><i class="fa fa-list"></i> 配置管理</a>
+			<a href="" class="btn btn-success"><i class="fa fa-plus"></i> 添加配置</a>
+		</div>
+	</div>
+	<div class="card-header">
+	<ul class="nav nav-tabs card-header-tabs pull-left" role="tablist">
+		<li class="nav-item"><a class="nav-link {empty name='$group_id'}active{/empty}" href="{:url('admin/config/index')}">全部</a></li>
+		{volist name='group' id='item'}
+		<li class="nav-item"><a href="{:url('admin/config/index',['group'=>$key])}" class="nav-link {eq name='$group_id' value='$key'}active{/eq}">{$item}</a></li>
+		{/volist}
+	</ul>
+	</div>
+	<div class="card-block">
+		<div class="table-responsive tab-pane active">
+			<table class="table table-hover table-default table-striped table-sm">
+				<thead class="thead-inverse">
+					<tr>
+						<th><input class="ids row-selected" type="checkbox" name="id[]"></th>
+						<th>ID</th>
+						<th>名称</th>
+                        <th>标题</th>
+                        <th>分组</th>
+                        <th>类型</th>
+                        <th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{notempty name='list'}
+				{volist name='list' id='vo'}
+					<tr>
+						<td><input class="ids row-selected" type="checkbox" name="id[]"></td>
+						<td>{$vo.id}</td>
+						<td>{$vo.name}</td>
+						<td>{$vo.title}</td>
+						<td>{$group[$vo.group]|default=''}</td>
+						<td>{$vo.type_text|default=''}</td>
+						<td>
+							<a href="" class="btn btn-success btn-sm">编辑</a>
+							<a href="" class="btn btn-danger btn-sm">删除</a>
+						</td>
+					</tr>
+				{/volist}
+				{/notempty}
+				</tbody>
+			</table>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-body">{$page}</div>
+		</div>
+	</div>
+</div>
+{/block}
